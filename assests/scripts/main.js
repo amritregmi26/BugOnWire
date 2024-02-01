@@ -112,7 +112,7 @@ if (canvas.getContext) {
     function collisionDetection() {
         for (let i = 0; i < obstaclesList.length; i++) {
             // same wire index and same y position of obstacle and bug will end the game
-            if (obstaclesList[i].y + obstaclesList[i].h === bug.y
+            if (obstaclesList[i].y + obstaclesList[i].h >= bug.y
                 && obstaclesList[i].wireIndex === wireIndex) {
                 gameOver = true;
             }
