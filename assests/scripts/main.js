@@ -1,3 +1,5 @@
+import Jump from "./jump.js";
+
 let canvas = document.querySelector("#gameCanvas");
 canvas.height = 600;
 canvas.width = 800;
@@ -7,15 +9,16 @@ if (canvas.getContext) {
 
     const ctx = canvas.getContext("2d");
     let gameOver = false;
+    let jump = new Jump();
+
 
     // Initial bug logic
     const bug = {
         x: canvas.width / 2, // 400
-        y: canvas.height - 50, // 550
-        width: 50,
+        y: canvas.height - 30, // 550
+        width: 50,// Jumping up by using scaling method
         height: 50,
-        color: "green",
-        scale: 2
+        color: "green"
     }
 
     // Initial wire logic
@@ -34,12 +37,12 @@ if (canvas.getContext) {
             { wire: (3 * canvas.width) / 5 },
             { wire: (4 * canvas.width) / 5 }
         ],
-        y: 20,
+        y: 10,
         width: 30,
         height: 30
     };
 
-    const obstaclesList = [];
+    let obstaclesList = [];
 
     // wire index and distance calculation for bug movement and collision detection
     let wireDistance = canvas.width / wires.length;
@@ -51,10 +54,10 @@ if (canvas.getContext) {
         ctx.fillStyle = bug.color;
 
         const bugX = wires[wireIndex].x;
-        let x = bugX - (bug.width / 2) * bug.scale / 2;
-        let y = bug.y - (bug.height / 2) * bug.scale / 2;
-        let width = bug.width * bug.scale / 2;
-        let height = bug.height * bug.scale / 2;
+        let x = bugX - (bug.width / 2) + jump.jumpBugX;
+        let y = bug.y - (bug.height / 2) + jump.jumpBugY;
+        let width = bug.width;
+        let height = bug.height;
 
         ctx.fillRect(x, y, width, height);
     }
@@ -100,20 +103,13 @@ if (canvas.getContext) {
         }
     }
 
-    // Jumping up by using scaling method
-    function jumpBug() {
-        bug.scale += 0.5
-        setTimeout(() => {
-            bug.scale = 2;
-        }, 700)
-    }
-
     // collision Detection function
     function collisionDetection() {
         for (let i = 0; i < obstaclesList.length; i++) {
             // same wire index and same y position of obstacle and bug will end the game
             if (obstaclesList[i].y + obstaclesList[i].h >= bug.y
-                && obstaclesList[i].wireIndex === wireIndex) {
+                && obstaclesList[i].wireIndex === wireIndex
+                && !jump.isJumping) {
                 gameOver = true;
             }
         }
@@ -122,23 +118,40 @@ if (canvas.getContext) {
     // Event listner to check key presses
     document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowRight") {
-            if (wireIndex === 3) wireIndex = 3;
-            else wireIndex++;
+            if (!jump.isJumping) {
+                if (wireIndex === 3) wireIndex = 3;
+                else wireIndex++;
+            }
         }
 
         else if (e.key === "ArrowLeft") {
-            if (wireIndex === 0) wireIndex = 0;
-            else wireIndex--;
+            if (!jump.isJumping) {
+                if (wireIndex === 0) wireIndex = 0;
+                else wireIndex--;
+            }
         }
 
         else if (e.key === " ") {
-            jumpBug();
+            if (!jump.isJumping) 
+            {
+                jump.jumpBug();
+            }
         }
     })
 
-    // main Function
+    // Restart game after game over
+    function restart() {
+        gameOver = false;
+        jump.isJumping = false;
+
+        obstaclesList = [];
+
+        wireIndex = Math.floor(bug.x / wireDistance);
+    }
+
+    // main function
     function main() {
-    
+
         if (!gameOver) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawWires();
@@ -157,7 +170,8 @@ if (canvas.getContext) {
 
         else {
             alert("Game Over !");
-            gameOver = false;
+            restart();
+            main();
         }
     }
 
