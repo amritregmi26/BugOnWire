@@ -2,6 +2,7 @@ import Jump from "./jump.js";
 import Bug from "./bug.js";
 import Obstacles from "./obstacles.js";
 import Wires from "./wires.js";
+import Score from "./score.js";
 
 let canvas = document.querySelector("#gameCanvas");
 canvas.height = 600;
@@ -14,11 +15,27 @@ if (canvas.getContext) {
     let ctx = canvas.getContext("2d");
     let gameOver = false;
 
+    let wires = [
+        { x: canvas.width / 5 },
+        { x: (2 * canvas.width) / 5 },
+        { x: (3 * canvas.width) / 5 },
+        { x: (4 * canvas.width) / 5 }
+    ]
+
     // Initializing imported Classes
     let jumpObj = new Jump();
     let obstacleObj = new Obstacles(ctx, canvas);
-    let wireObj = new Wires(ctx, canvas);
-    let bugObj = new Bug(canvas, ctx, wireObj);
+    let bugObj = new Bug(canvas, ctx, wires);
+    let scoreObj = new Score(canvas, wires, ctx);
+
+
+    // Drawing wires
+    function drawWires() {
+        ctx.fillStyle = "#000";
+        for (let item of wires) {
+            ctx.fillRect(item.x, 0, 3, canvas.height);
+        }
+    }
 
     // collision Detection function
     function collisionDetection() {
@@ -34,24 +51,22 @@ if (canvas.getContext) {
 
     // Event listner to check key presses
     document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight") {
-            if (!jumpObj.isJumping) {
-                if (bugObj.wireIndex === 3) bugObj.wireIndex = 3;
-                else bugObj.wireIndex++;
-            }
+        if (e.key === "ArrowRight" && !jumpObj.isJumping) {
+            if (bugObj.wireIndex === 3) bugObj.wireIndex = 3;
+            else bugObj.wireIndex++;
         }
 
-        else if (e.key === "ArrowLeft") {
-            if (!jumpObj.isJumping) {
-                if (bugObj.wireIndex === 0) bugObj.wireIndex = 0;
-                else bugObj.wireIndex--;
-            }
+        else if (e.key === "ArrowLeft" && !jumpObj.isJumping) {
+            if (bugObj.wireIndex === 0) bugObj.wireIndex = 0;
+            else bugObj.wireIndex--;
         }
 
-        else if (e.key === " ") {
-            if (!jumpObj.isJumping) {
-                jumpObj.jumpBug(bugObj.bug);
-            }
+        else if (e.key === "ArrowUp" && !jumpObj.isJumping) {
+            jumpObj.jumpBug(bugObj.bug);
+        }
+
+        else if (e.key === " " && gameOver) {
+            restart();
         }
     })
 
@@ -63,6 +78,11 @@ if (canvas.getContext) {
         obstacleObj.obstaclesList = [];
 
         bugObj.wireIndex = Math.floor(bugObj.bug.x / bugObj.wireDistance);
+
+        scoreObj.startTime = performance.now();
+
+        mainLoop = setInterval(main, 16);
+
     }
 
     // main function
@@ -70,27 +90,42 @@ if (canvas.getContext) {
 
         if (!gameOver) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            wireObj.drawWires();
+            drawWires();
             obstacleObj.drawObstacles();
+            scoreObj.drawScore();
             bugObj.drawBug();
 
-            if (Math.random() < 0.04) {
+            if (Math.random() < 0.02) {
                 obstacleObj.createObstacles();
             }
 
             obstacleObj.moveObstacle();
             collisionDetection();
-
-            requestAnimationFrame(main);
+            document.querySelector(".game-control").style.display = "none";
         }
 
         else {
-            alert("Game Over !");
-            restart();
-            requestAnimationFrame(main);
+            let gameOverCard = document.querySelector(".game-control");
+            let yourScore = scoreObj.updateScore();
+
+            // Get highest score
+            let highestScore = localStorage.getItem('highestScore') || 0;
+
+            // Updating Highscore
+            if (yourScore > highestScore) {
+                localStorage.setItem('highestScore', yourScore);
+            }
+
+            // Displaying Game over card
+            gameOverCard.style.display = "flex";
+            gameOverCard.children[1].innerHTML = `Your Score is ${yourScore}`;
+
+            gameOverCard.children[2].innerHTML = `Highest Score is ${localStorage.getItem("highestScore")}`;
+
+            clearInterval(mainLoop);
         }
     }
 
-    main();
-}
+    let mainLoop = setInterval(main, 16);
 
+}
