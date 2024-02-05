@@ -21,7 +21,7 @@ body {
 canvas {
     display: block;
     margin: auto;
-    background: url("/assests/img/background.jpg");
+    background: url("assests/img/background.jpg");
 }
 
 .game-control {
