@@ -11,25 +11,39 @@ body {
     overflow: hidden;
 }
 
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 canvas {
     display: block;
     margin: auto;
-    background-color: #87CEEB; /* Sky Blue */
+    background: url("/assests/img/background.jpg");
 }
 
-.game-control
-{
+.game-control {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 40%;
+    left: 20%;
     transform: translate(-50%, -50%);
     padding: 1.5rem;
     border-radius: 0.7rem;
     display: none;
     flex-direction: column;
-    width: 50%;
+    width: 35%;
     gap: 1rem;
     background-color: white;
+}
+
+.instruction {
+    padding: 1.5rem;
+}
+
+.instruction p {
+    line-height: 4rem;
 }
 
 code

@@ -10,7 +10,7 @@ export default class Score {
     let currentTime = performance.now();
     let elapsedTime = currentTime - this.startTime;
 
-    let seconds = Math.floor((elapsedTime % (60 * 1000)) / 1000);
+    let seconds = Math.floor(elapsedTime / 1000);
 
     return seconds;
 

@@ -1,7 +1,5 @@
-import Jump from "./jump.js";
 import Bug from "./bug.js";
 import Obstacles from "./obstacles.js";
-import Wires from "./wires.js";
 import Score from "./score.js";
 
 let canvas = document.querySelector("#gameCanvas");
@@ -23,7 +21,6 @@ if (canvas.getContext) {
     ]
 
     // Initializing imported Classes
-    let jumpObj = new Jump();
     let obstacleObj = new Obstacles(ctx, canvas);
     let bugObj = new Bug(canvas, ctx, wires);
     let scoreObj = new Score(canvas, wires, ctx);
@@ -31,9 +28,9 @@ if (canvas.getContext) {
 
     // Drawing wires
     function drawWires() {
-        ctx.fillStyle = "#000";
+        ctx.fillStyle = "#333";
         for (let item of wires) {
-            ctx.fillRect(item.x, 0, 3, canvas.height);
+            ctx.fillRect(item.x - 12, 0, 12, canvas.height);
         }
     }
 
@@ -42,8 +39,8 @@ if (canvas.getContext) {
         for (let i = 0; i < obstacleObj.obstaclesList.length; i++) {
             // same wire index and same y position of obstacle and bug will end the game
             if (obstacleObj.obstaclesList[i].y + obstacleObj.obstaclesList[i].h * 1.695 >= bugObj.bug.y
-                && obstacleObj.obstaclesList[i].wireIndex === bugObj.wireIndex
-                && !jumpObj.isJumping) {
+                && ((obstacleObj.obstaclesList[i].wireIndex === bugObj.wireIndex) || (obstacleObj.obstaclesList[i].wireIndex === "pole"))
+                && !bugObj.isJumping) {
                 gameOver = true;
             }
         }
@@ -51,18 +48,18 @@ if (canvas.getContext) {
 
     // Event listner to check key presses
     document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight" && !jumpObj.isJumping) {
+        if (e.key === "ArrowRight" && !bugObj.isJumping) {
             if (bugObj.wireIndex === 3) bugObj.wireIndex = 3;
             else bugObj.wireIndex++;
         }
 
-        else if (e.key === "ArrowLeft" && !jumpObj.isJumping) {
+        else if (e.key === "ArrowLeft" && !bugObj.isJumping) {
             if (bugObj.wireIndex === 0) bugObj.wireIndex = 0;
             else bugObj.wireIndex--;
         }
 
-        else if (e.key === "ArrowUp" && !jumpObj.isJumping) {
-            jumpObj.jumpBug(bugObj.bug);
+        else if (e.key === "ArrowUp" && !bugObj.isJumping) {
+            bugObj.jumpBug(bugObj.bug);
         }
 
         else if (e.key === " " && gameOver) {
@@ -73,7 +70,7 @@ if (canvas.getContext) {
     // Restart game after game over
     function restart() {
         gameOver = false;
-        jumpObj.isJumping = false;
+        bugObj.isJumping = false;
 
         obstacleObj.obstaclesList = [];
 
@@ -95,7 +92,23 @@ if (canvas.getContext) {
             scoreObj.drawScore();
             bugObj.drawBug();
 
-            if (Math.random() < 0.02) {
+            if (scoreObj.updateScore() <= 10 && Math.random() < 0) {
+                obstacleObj.createObstacles();
+            }
+
+            else if (scoreObj.updateScore() > 10 && scoreObj.updateScore() <= 50 && Math.random() < 0.01) {
+                obstacleObj.createObstacles();
+            }
+
+            else if (scoreObj.updateScore() > 50 && scoreObj.updateScore() <= 70 && Math.random() < 0.03) {
+                obstacleObj.createObstacles();
+            }
+
+            else if (scoreObj.updateScore() > 70 && scoreObj.updateScore() <= 100 && Math.random() < 0.05) {
+                obstacleObj.createObstacles();
+            }
+
+            else if (scoreObj.updateScore() > 100 && Math.random() < 0.06) {
                 obstacleObj.createObstacles();
             }
 

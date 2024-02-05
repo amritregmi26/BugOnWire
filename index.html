@@ -9,13 +9,21 @@
 </head>
 
 <body>
-    <canvas id="gameCanvas"></canvas>
+    <div class="container">
+        <canvas id="gameCanvas"></canvas>
 
-    <div class="game-control">
-        <h1>Game Over</h1>
-        <p></p>
-        <p> High Score: </p>
-        <p> Press <code>Space</code> to Start Again.</p>
+        <div class="game-control">
+            <h1>Game Over</h1>
+            <p></p>
+            <p> High Score: </p>
+            <p> Press <code>Space</code> to Start Again.</p>
+        </div>
+
+        <div class="instruction">
+            <p>Once the page is loaded, the game will start automatically.
+            Press <code>ArrowUp</code> Key to jump. <code>ArrowLeft</code> key to move to the left and
+                <code>ArrowRight</code> key to move to the right.</p>
+        </div>
     </div>
 </body>
 <script defer type="module" src="assests/scripts/main.js"></script>
