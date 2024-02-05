@@ -41,6 +41,10 @@ canvas {
     background-color: white;
 }
 
+.game-control code {
+    background-color: #c4c4c4;
+}
+
 .instruction {
     padding: 1.5rem;
     color: black;

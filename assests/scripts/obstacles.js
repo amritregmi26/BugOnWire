@@ -1,5 +1,8 @@
+import Score from "./score.js";
+
 export default class Obstacles {
     constructor(ctx, c) {
+        this.scoreObj = new Score();
         this.obstaclesList = [];
         this.ctx = ctx;
         this.canvas = c;
@@ -33,10 +36,9 @@ export default class Obstacles {
         this.crowImage = new Image();
         this.crowImage.src = 'assests/img/crow.png';
 
-
         setInterval(() => {
             this.createPole();
-        }, 5000);
+        }, 5000)
     }
     // Drawing obstacle that are created already
     drawObstacles() {
