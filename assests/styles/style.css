@@ -9,6 +9,8 @@
 body {
     margin: 0;
     overflow: hidden;
+    background: url("/assests/img/body-bg.png") no-repeat;
+    background-size: cover;
 }
 
 .container {
@@ -20,8 +22,9 @@ body {
 
 canvas {
     display: block;
-    margin: auto;
-    background: url("assests/img/background.jpg");
+    margin-top: 1rem;
+    margin-left: 1rem;
+    background: url("/assests/img/background.jpg");
 }
 
 .game-control {
@@ -40,6 +43,9 @@ canvas {
 
 .instruction {
     padding: 1.5rem;
+    color: #eee;
+    font-weight: bold;
+    font-size: 1.5rem;
 }
 
 .instruction p {

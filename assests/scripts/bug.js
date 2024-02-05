@@ -31,7 +31,7 @@ export default class Bug {
         let width = this.bug.width * this.bug.scale / 2;
         let height = this.bug.height * this.bug.scale / 2;
 
-        this.ctx.drawImage(this.bugImage, x, y, width, height);
+        this.ctx.drawImage(this.bugImage, x-5, y, width, height);
         
     }
 

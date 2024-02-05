@@ -24,8 +24,6 @@ export default class Obstacles {
             color: "#8B4513"
         }
 
-        this.polenum = 0;
-
         this.lizardImage = new Image();
         this.lizardImage.src = 'assests/img/lizard.png';
 
@@ -38,7 +36,6 @@ export default class Obstacles {
 
         setInterval(() => {
             this.createPole();
-            this.polenum++;
         }, 5000);
     }
     // Drawing obstacle that are created already
