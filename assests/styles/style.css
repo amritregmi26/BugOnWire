@@ -43,7 +43,7 @@ canvas {
 
 .instruction {
     padding: 1.5rem;
-    color: #eee;
+    color: black;
     font-weight: bold;
     font-size: 1.5rem;
 }
@@ -54,8 +54,10 @@ canvas {
 
 code
 {
-    background-color: #c4c4c4;
-    border: 1px solid #4e4e4e;
+    background-color: #555;
+    border: 1px solid #555;
     border-radius: 0.2rem;
     padding: 0.2rem 0.8rem;
 }
+
+
